@@ -6,6 +6,7 @@ import path from "node:path"
 import moment from "moment"
 import GachaLog from "./gachaLog.js"
 import lodash from "lodash"
+import { uigfKey } from "./games.js"
 
 export default class ExportLog extends base {
   constructor(e) {
@@ -113,7 +114,7 @@ export default class ExportLog extends base {
           ...basic,
           version: "v4.0",
         },
-        [this.e.game == "sr" ? "hkrpg" : "hk4e"]: [
+        [uigfKey(this.e.game)]: [
           {
             uid: this.uid,
             lang: list[0].lang,
@@ -311,7 +312,7 @@ export default class ExportLog extends base {
         this.game = "sr"
       }
 
-      let list = json.list ? json.list : json[this.game === "sr" ? "hkrpg" : "hk4e"][0].list
+      let list = json.list ? json.list : json[uigfKey(this.game)][0].list
 
       if (list && list.length > 0 && (!list[0].name || !list[0].item_type || !list[0].rank_type)) {
         const configMapping = {
@@ -337,7 +338,7 @@ export default class ExportLog extends base {
           },
         }
 
-        const mapping = this.e.isSr ? configMapping.hkrpg : configMapping.hk4e
+        const mapping = configMapping[uigfKey(this.e.game)]
 
         let configData = {}
         try {
@@ -405,7 +406,7 @@ export default class ExportLog extends base {
         let gachLog = new GachaLog(this.e)
         gachLog.uid = json.info?.uid
           ? json.info.uid
-          : json[this.game === "sr" ? "hkrpg" : "hk4e"][0].uid
+          : json[uigfKey(this.game)][0].uid
         gachLog.type = type
         gachLog.writeJson(data[type])
 

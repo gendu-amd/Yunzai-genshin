@@ -7,6 +7,7 @@ import moment from "moment"
 import fs from "node:fs"
 import common from "../../../lib/common/common.js"
 import { Character } from "#miao.models"
+import { ledgerFields } from "./games.js"
 
 export default class Ledger extends base {
   constructor(e) {
@@ -105,10 +106,12 @@ export default class Ledger extends base {
       day = `${this[this.e.isSr ? "srmonth" : "month"]}月`
     }
 
-    let gacha = this.e.isSr ? "current_hcoin" : "current_primogems"
-    let last_gacha = this.e.isSr ? "last_hcoin" : "last_primogems"
-    let mora = this.e.isSr ? "current_rails_pass" : "current_mora"
-    let last_mora = this.e.isSr ? "last_rails_pass" : "last_mora"
+    // P1：货币字段改为查 Games 表（替代 isSr 二元分支，天然支持多游戏）
+    const lf = ledgerFields(this.e.game)
+    let gacha = lf.jadeField
+    let last_gacha = lf.jadeField.replace("current_", "last_")
+    let mora = lf.coinField
+    let last_mora = lf.coinField.replace("current_", "last_")
 
     ledgerInfo.month_data.gacha = (ledgerInfo.month_data[gacha] / 160).toFixed(0)
     ledgerInfo.month_data.last_gacha = (ledgerInfo.month_data[last_gacha] / 160).toFixed(0)
@@ -242,7 +245,8 @@ export default class Ledger extends base {
   async ysLedger(ck, month, isTask) {
     let ledgerInfo = {}
     if (isTask) {
-      let mysApi = new MysApi(ck.uid, ck.ck, { log: false }, this.e?.isSr)
+      // 修复 P-GS-2：MysApi 第4参(isSr)被忽略，游戏应放进 option.game
+      let mysApi = new MysApi(ck.uid, ck.ck, { log: false, game: this.e.game })
       ledgerInfo = await mysApi.getData("ys_ledger", { month })
       ledgerInfo = await new MysInfo(this.e).checkCode(
         ledgerInfo,
@@ -408,8 +412,10 @@ export default class Ledger extends base {
       yearText,
     }
 
-    let Primogems = this.e.isSr ? "current_hcoin" : "current_primogems"
-    let Mora = this.e.isSr ? "current_rails_pass" : "current_mora"
+    // P1：货币字段查 Games 表
+    const lfc = ledgerFields(this.e.game)
+    let Primogems = lfc.jadeField
+    let Mora = lfc.coinField
     lodash.forEach(NoteData, val => {
       data.allPrimogems += val.month_data[Primogems]
       data.allMora += val.month_data[Mora]

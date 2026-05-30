@@ -5,6 +5,7 @@ import fs from "node:fs"
 import common from "../../../lib/common/common.js"
 import gsCfg from "./gsCfg.js"
 import { Character, Weapon } from "#miao.models"
+import { gachaPools, term } from "./games.js"
 
 export default class GachaLog extends base {
   constructor(e) {
@@ -22,23 +23,8 @@ export default class GachaLog extends base {
       ? `./data/srJson/${this.e.user_id}/`
       : `./data/gachaJson/${this.e.user_id}/`
 
-    const gsPool = [
-      { type: 301, typeName: "角色" },
-      { type: 302, typeName: "武器" },
-      { type: 500, typeName: "集录" },
-      { type: 200, typeName: "常驻" },
-    ]
-
-    const srPool = [
-      { type: 11, typeName: "角色" },
-      { type: 12, typeName: "光锥" },
-      { type: 21, typeName: "角色联动" },
-      { type: 22, typeName: "光锥联动" },
-      { type: 1, typeName: "常驻" },
-      { type: 2, typeName: "新手" },
-    ]
-
-    this.pool = e.isSr ? srPool : gsPool
+    // P2：卡池查 Games 表（gachaPools(gs/sr) 与原 gsPool/srPool 等价）
+    this.pool = gachaPools(e.game)
   }
 
   static getIcon(name, type = "role", game = "") {
@@ -442,7 +428,7 @@ export default class GachaLog extends base {
     const poolList = [
       "角色",
       "角色联动",
-      this.e?.isSr ? "光锥" : "武器",
+      term(this.e.game, "weapon"),
       "光锥联动",
       "集录",
       "常驻",
@@ -515,7 +501,7 @@ export default class GachaLog extends base {
         break
       case "武器":
         type = this.e.isSr ? 12 : 302
-        typeName = this.e.isSr ? "光锥" : "武器"
+        typeName = term(this.e.game, "weapon")
         break
       case "集录":
         type = 500
@@ -902,7 +888,7 @@ export default class GachaLog extends base {
     const typeName = data.typeName || this.typeName
     const max = type === 12 || type === 22 || type === 302 ? 80 : 90
     let line = []
-    let weapon = this.e.isSr ? "光锥" : "武器"
+    let weapon = term(this.e.game, "weapon")
     //最非，最欧
     let maxValue, minValue
 

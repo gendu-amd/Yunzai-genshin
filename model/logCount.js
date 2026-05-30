@@ -4,6 +4,7 @@ import fs from "node:fs"
 import gsCfg from "./gsCfg.js"
 import moment from "moment"
 import GachaLog from "./gachaLog.js"
+import { term } from "./games.js"
 
 export default class LogCount extends base {
   constructor(e) {
@@ -133,7 +134,7 @@ export default class LogCount extends base {
         break
       case "武器":
         this.type = this.e.isSr ? 12 : 302
-        this.typeName = this.e.isSr ? "光锥" : "武器"
+        this.typeName = term(this.e.game, "weapon")
         break
       case "光锥":
         this.type = 12
