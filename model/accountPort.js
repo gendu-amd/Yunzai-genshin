@@ -32,6 +32,18 @@ const accountPort = {
     const MysApi = (await import("./mys/mysApi.js")).default
     return new MysApi(uid, ck, option)
   },
+
+  /** uid 是否已绑定 Cookie。等价 MysInfo.checkUidBing(uid, game) */
+  async checkUidBing(uid, game = "gs") {
+    const MysInfo = (await import("./mys/mysInfo.js")).default
+    return MysInfo.checkUidBing(uid, game)
+  },
+
+  /** 初始化某 api 的 MysApi（解析 uid/ck 等）。等价 MysInfo.init(e, api) */
+  async init(e, api) {
+    const MysInfo = (await import("./mys/mysInfo.js")).default
+    return MysInfo.init(e, api)
+  },
 }
 
 /** 注册到 L1 契约层（宿主已挂载时）。幂等、容错：拿不到 core 不影响 genshin 加载。 */
