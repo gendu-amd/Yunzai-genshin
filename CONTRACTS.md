@@ -16,6 +16,25 @@
   | `mysApi(uid, ck, {game})` | 构造 `MysApi` 客户端 |
 - 性质:**非侵入新增**——仅在现有 `MysInfo`/`MysApi` 之上包一层 `core` 通道;旧的直接 import / `file://` 调用全部保留照常工作。消费方可逐步改用 `Bot.core.require("account")`。
 
+### `gameRegistry`（多游戏 SSOT） — chapter1-02b（2026-05-31）
+- 实现:`model/gameRegistryPort.js`,注册于 `index.js`(副作用 import)。
+- 获取:`const gr = Bot.core.require("gameRegistry")`(取不到→null,调用方降级)。
+- 底层即 `model/games.js`(纯配置查表、无副作用、无网络),把多游戏单一事实源对外标准化。
+- 方法:
+  | 方法 | 说明 / 示例 |
+  |---|---|
+  | `games()` | 全部游戏 key,如 `["gs","sr","zzz"]` |
+  | `enabled()` | 已启用游戏 key |
+  | `resolveGame(e)` | 由事件解析游戏(`#`=gs/`*`=sr/`%`=zzz) |
+  | `gameKey(g)` | 归一化游戏 key |
+  | `isGame(e, key)` | 事件是否属指定游戏 |
+  | `biz(game, isOs=false)` | game_biz,如 `biz("sr")==="hkrpg_cn"` |
+  | `region(uid, game)` | 由 uid 推断 region,如 `region("100098441","gs")==="cn_gf01"` |
+  | `term(game, key)` | 术语,如 `term("sr","weapon")==="光锥"` |
+  | `gachaPools(game)` / `ledgerFields(game)` | 抽卡卡池 / 札记字段 |
+  | `uigfKey(game)` | 导出键,如 `uigfKey("sr")==="hkrpg"` |
+  | `tplDir(game)` / `prefix(game)` | 模板子目录 / 命令前缀 |
+- 性质:**非侵入新增**——`games.js` 现有 import/调用全部保留;消费方可逐步改用 `Bot.core.require("gameRegistry")` 替代散落的硬编码三元判断。
+
 ## 计划提供（后续）
-- `gameRegistry`（多游戏 SSOT,基于 `model/games.js`）
-- 见主仓 `docs/refactor-progress.md` 路线。
+- `PluginManifest`（懒激活协议）等,见主仓 `docs/refactor-progress.md` 路线。
