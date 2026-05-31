@@ -1,4 +1,6 @@
 import fs from "node:fs"
+// chapter1-03：向 L1 契约层注册 account 能力（副作用 import，非侵入；详见 model/accountPort.js）
+import "./model/accountPort.js"
 
 const files = fs.readdirSync("./plugins/genshin/apps").filter(file => file.endsWith(".js"))
 
