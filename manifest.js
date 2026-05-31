@@ -9,8 +9,8 @@ export const manifest = {
   name: "genshin",
   version: "3.x",
   type: "data-provider",
-  // 已对外提供（见 model/accountPort.js、model/gameRegistryPort.js / CONTRACTS.md）
-  provides: ["account", "gameRegistry"],
+  // 已对外提供（见 model/*Port.js / CONTRACTS.md）
+  provides: ["account", "gameRegistry", "gacha"],
   // 依赖能力（缺失→降级；随迁移逐步接入 core.require，当前仍走插件内部实现）
   requires: [],
   // 后续暴露的 hook 点（如 gacha:afterFetch），待实现后填充
@@ -22,7 +22,7 @@ try {
   const reg = globalThis.Bot?.core?.require?.("pluginRegistry")
   if (reg) {
     reg.register(manifest)
-    logger?.mark?.("[contracts] genshin 声明 manifest：provides=[account, gameRegistry]")
+    logger?.mark?.("[contracts] genshin 声明 manifest：provides=[account, gameRegistry, gacha]")
   }
 } catch (err) {
   logger?.warn?.(`[contracts] 注册 genshin manifest 失败：${err?.message}`)

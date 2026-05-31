@@ -38,6 +38,18 @@
   | `tplDir(game)` / `prefix(game)` | 模板子目录 / 命令前缀 |
 - 性质:**非侵入新增**——`games.js` 现有 import/调用全部保留;消费方可逐步改用 `Bot.core.require("gameRegistry")` 替代散落的硬编码三元判断。
 
+### `gacha`（GachaPort） — chapter2/P2（2026-05-31）
+- 实现:`model/gachaPort.js`(工厂式包 `model/gachaLog.js` 的 `GachaLog` 与 `apps/payLog.js` 的 `payLog`),注册于 `index.js`。
+- 获取:`const gacha = Bot.core.require("gacha")`。
+- 方法:
+  | 方法 | 说明 |
+  |---|---|
+  | `log(e)` | 构造抽卡记录处理器(等价 `new GachaLog(e)`),可 `.logUrl()/.updateLog()/.getLogData()` |
+  | `importByUrl(e)` | 便捷:按 `e.msg` 中 url 导入(等价 `new GachaLog(e).logUrl()`) |
+  | `payLog()` | 构造充值流水处理器(等价 `new payLog()`),设 `.e` 后 `.getAuthKey()/.payLog(e)` |
+- 性质:工厂返回 genshin 现有类实例(同一类、构造无副作用),与旧 `file://` import 逐字等价;非侵入。
+- 注:SR 抽卡 authkey 受平台限制(见 multi-game-refactor §4),与本能力无关。
+
 ## 插件清单（manifest） — chapter1-05（2026-05-31）
 - 实现:`manifest.js`(副作用 import 自注册到 `Bot.core.require('pluginRegistry')`)。
 - 声明:`provides=[account, gameRegistry]`、`requires=[]`、`type=data-provider`、`guoba=true`。
