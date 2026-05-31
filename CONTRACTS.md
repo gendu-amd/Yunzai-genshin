@@ -16,6 +16,7 @@
   | `mysApi(uid, ck, {game})` | 构造 `MysApi` 客户端 |
   | `checkUidBing(uid, game="gs")` | uid 是否已绑定 Cookie,等价 `MysInfo.checkUidBing` |
   | `init(e, api)` | 初始化某 api 的 MysApi,等价 `MysInfo.init` |
+  | `bindCookie(e)` | 绑定 Cookie/Stoken(先设 `e.ck`/`e.msg`),等价 `new User(e).bing()`;写操作 |
 - 性质:**非侵入新增**——仅在现有 `MysInfo`/`MysApi` 之上包一层 `core` 通道;旧的直接 import / `file://` 调用全部保留照常工作。消费方可逐步改用 `Bot.core.require("account")`。
 
 ### `gameRegistry`（多游戏 SSOT） — chapter1-02b（2026-05-31）

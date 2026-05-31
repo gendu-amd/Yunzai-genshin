@@ -44,6 +44,15 @@ const accountPort = {
     const MysInfo = (await import("./mys/mysInfo.js")).default
     return MysInfo.init(e, api)
   },
+
+  /**
+   * 绑定 Cookie/Stoken（调用方先设 e.ck / e.msg 为待绑定内容）。等价 new User(e).bing()。
+   * 注：写操作（落库/redis），调用方自负鉴权与私聊约束。
+   */
+  async bindCookie(e) {
+    const User = (await import("./user.js")).default
+    return new User(e).bing()
+  },
 }
 
 /** 注册到 L1 契约层（宿主已挂载时）。幂等、容错：拿不到 core 不影响 genshin 加载。 */
