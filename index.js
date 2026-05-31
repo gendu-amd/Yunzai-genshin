@@ -2,6 +2,8 @@ import fs from "node:fs"
 // chapter1-03/1-02b：向 L1 契约层注册能力（副作用 import，非侵入；详见 model/*Port.js）
 import "./model/accountPort.js"
 import "./model/gameRegistryPort.js"
+// chapter1-05：声明插件清单（provides/requires/hooks）
+import "./manifest.js"
 
 const files = fs.readdirSync("./plugins/genshin/apps").filter(file => file.endsWith(".js"))
 

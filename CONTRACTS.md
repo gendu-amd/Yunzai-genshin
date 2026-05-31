@@ -36,5 +36,11 @@
   | `tplDir(game)` / `prefix(game)` | 模板子目录 / 命令前缀 |
 - 性质:**非侵入新增**——`games.js` 现有 import/调用全部保留;消费方可逐步改用 `Bot.core.require("gameRegistry")` 替代散落的硬编码三元判断。
 
+## 插件清单（manifest） — chapter1-05（2026-05-31）
+- 实现:`manifest.js`(副作用 import 自注册到 `Bot.core.require('pluginRegistry')`)。
+- 声明:`provides=[account, gameRegistry]`、`requires=[]`、`type=data-provider`、`guoba=true`。
+- 纯声明式元信息,框架据此做能力提供/消费查询、依赖体检;不触碰 loader/派发。
+- 随迁移推进,`requires`/`hooks` 逐步填充(如接入 `renderer`/暴露 `gacha:afterFetch`)。
+
 ## 计划提供（后续）
-- `PluginManifest`（懒激活协议）等,见主仓 `docs/refactor-progress.md` 路线。
+- 懒激活(命令前缀命中才激活,改 loader,须 `0-00` 基线护栏)等,见主仓 `docs/refactor-progress.md` 路线。
