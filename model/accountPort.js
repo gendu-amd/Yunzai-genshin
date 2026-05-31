@@ -53,6 +53,15 @@ const accountPort = {
     const User = (await import("./user.js")).default
     return new User(e).bing()
   },
+
+  /**
+   * 遍历所有已绑 CK 的用户（fn 收到 NoteUser 实例，含 .qq / .eachMysUser）。
+   * 等价 NoteUser.forEach(fn)。读多账号 CK，调用方自负隐私/鉴权。
+   */
+  async forEachUser(fn) {
+    const NoteUser = (await import("./mys/NoteUser.js")).default
+    return NoteUser.forEach(fn)
+  },
 }
 
 /** 注册到 L1 契约层（宿主已挂载时）。幂等、容错：拿不到 core 不影响 genshin 加载。 */
