@@ -17,6 +17,14 @@ export const manifest = {
   requires: [],
   // 后续暴露的 hook 点,待实现后填充
   hooks: [],
+  // ADR-007 贡献点：本插件支持的游戏命令前缀,框架 wireManifests 自动注册到 gamePrefix。
+  // test 为正则字符串(框架 new RegExp),与框架旧 srReg/zzzReg 逐字一致、顺序 sr→zzz。
+  contributes: {
+    gamePrefix: [
+      { game: "sr", test: "^#?(\\*|星铁|星轨|穹轨|星穹|崩铁|星穹铁道|崩坏星穹铁道|铁道)+", cmd: "#星铁" },
+      { game: "zzz", test: "^#?(%|％|绝区零|绝区)+", cmd: "#绝区零" },
+    ],
+  },
   guoba: true,
 }
 
