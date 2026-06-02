@@ -1,10 +1,6 @@
 import fs from "node:fs"
-// chapter1-03/1-02b：向 L1 契约层注册能力（副作用 import，非侵入；详见 model/*Port.js）
-import "./model/accountPort.js"
-import "./model/gameRegistryPort.js"
-import "./model/gachaPort.js"
-// chapter1-05：声明插件清单（provides/requires/hooks）
-import "./manifest.js"
+// ADR-007 统一装配：能力注册 + manifest 声明由框架 loader.wireManifests() 据 manifest.js 自动完成,
+// 不再在此手写副作用 import(*Port.js 仅导出实现,manifest.js 仅声明)。
 
 const files = fs.readdirSync("./plugins/genshin/apps").filter(file => file.endsWith(".js"))
 

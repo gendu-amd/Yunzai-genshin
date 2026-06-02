@@ -31,13 +31,5 @@ const gachaPort = {
   },
 }
 
-try {
-  if (globalThis.Bot?.core?.provide) {
-    Bot.core.provide("gacha", gachaPort)
-    logger?.mark?.("[contracts] genshin 提供能力：gacha")
-  }
-} catch (err) {
-  logger?.warn?.(`[contracts] 注册 gacha 失败：${err?.message}`)
-}
-
+// ADR-007：注册由框架据 manifest.provides 自动完成,此处只导出实现。
 export default gachaPort

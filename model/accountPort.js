@@ -64,14 +64,5 @@ const accountPort = {
   },
 }
 
-/** 注册到 L1 契约层（宿主已挂载时）。幂等、容错：拿不到 core 不影响 genshin 加载。 */
-try {
-  if (globalThis.Bot?.core?.provide) {
-    Bot.core.provide("account", accountPort)
-    logger?.mark?.("[contracts] genshin 提供能力：account")
-  }
-} catch (err) {
-  logger?.warn?.(`[contracts] 注册 account 失败：${err?.message}`)
-}
-
+// ADR-007：注册由框架据 manifest.provides 自动完成(loader.wireManifests),此处只导出实现。
 export default accountPort
