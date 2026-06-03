@@ -50,5 +50,11 @@ const accountPort = {
   },
 }
 
-// ADR-007：注册由框架据 manifest.provides 自动完成(loader.wireManifests),此处只导出实现。
+// 直接注册到 L1 契约层(provider 自注册,简单显式;容错:拿不到 core 不影响 genshin 加载)。
+try {
+  globalThis.Bot?.core?.provide?.("account", accountPort)
+} catch (err) {
+  logger?.warn?.(`[contracts] 注册 account 失败:${err?.message}`)
+}
+
 export default accountPort

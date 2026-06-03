@@ -39,5 +39,10 @@ const gameRegistryPort = {
   prefix: game => Games.GAMES?.[Games.getGameKey(game)]?.prefix,
 }
 
-// ADR-007：注册由框架据 manifest.provides 自动完成,此处只导出实现。
+try {
+  globalThis.Bot?.core?.provide?.("gameRegistry", gameRegistryPort)
+} catch (err) {
+  logger?.warn?.(`[contracts] 注册 gameRegistry 失败:${err?.message}`)
+}
+
 export default gameRegistryPort

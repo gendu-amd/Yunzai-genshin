@@ -25,5 +25,10 @@ const gachaPort = {
   payLog: () => new payLog(),
 }
 
-// ADR-007：注册由框架据 manifest.provides 自动完成,此处只导出实现。
+try {
+  globalThis.Bot?.core?.provide?.("gacha", gachaPort)
+} catch (err) {
+  logger?.warn?.(`[contracts] 注册 gacha 失败:${err?.message}`)
+}
+
 export default gachaPort
