@@ -925,7 +925,7 @@ export default class GachaLog extends base {
           { lable: "未出四星", num: data.noFourNum, unit: "抽" },
           { lable: "五星常驻", num: data.wai, unit: "个" },
           { lable: "UP平均", num: data.isvalidNum, unit: "抽" },
-          { lable: `UP花费${this?.e?.isSr ? "星琼" : "原石"}`, num: data.upYs, unit: "" },
+          { lable: `UP花费${term(this.e.game, "currency")}`, num: data.upYs, unit: "" },
           { lable: "最欧", num: minValue, unit: "抽" },
         ],
       ]
