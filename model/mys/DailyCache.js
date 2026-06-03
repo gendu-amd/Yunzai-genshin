@@ -67,8 +67,10 @@ export default class DailyCache extends BaseModel {
   static async clearOutdatedData() {
     let keys = await redis.keys(`${redisKeyRoot}*`)
     const date = moment().format("MM-DD")
-    const testReg = new RegExp(`^${redisKeyRoot}(mys|hoyolab|config)-\\d{2}-\\d{2}`)
-    const todayReg = new RegExp(`^${redisKeyRoot}(mys|hoyolab|config)-${date}`)
+    // 真实 key 形如 Yz:cache:gs:cn_gf01-MM-DD[:table] / Yz:cache:sys:config-MM-DD —— 日期在中段，
+    // 旧正则按 (mys|hoyolab|config)- 锚定几乎不命中导致缓存泄漏。改为匹配任意 -MM-DD，排除今日。
+    const testReg = new RegExp(`^${redisKeyRoot}.+-\\d{2}-\\d{2}(:|$)`)
+    const todayReg = new RegExp(`-${date}(:|$)`)
     for (let key of keys) {
       if (testReg.test(key) && !todayReg.test(key)) {
         await redis.del(key)

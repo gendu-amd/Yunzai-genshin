@@ -1,16 +1,10 @@
 /**
- * GameRegistry 实现（chapter1-02b）
- *
- * 把 genshin 的多游戏 SSOT（model/games.js）包装成 L1 契约层的 `gameRegistry` 能力，
- * 注册到 `Bot.core.provide('gameRegistry', …)`。纯配置查表、无副作用。
- *
- * 非侵入：仅"新增" core 通道；games.js 现有 import/调用全部保留。
+ * `gameRegistry` 能力实现 —— 把多游戏 SSOT（model/games.js）暴露成一组干净的契约方法名
+ * (gameKey/biz/region/term/gachaPools…)。纯配置查表、无副作用。games.js 现有调用全部保留。
  */
 import * as Games from "./games.js"
 
 const gameRegistryPort = {
-  meta: { provider: "genshin", since: "3.1.3" },
-
   /** 全部游戏 key（含未启用） */
   games: () => Games.GAME_KEYS,
   /** 已启用游戏 key */

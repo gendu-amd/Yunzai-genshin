@@ -556,6 +556,11 @@ export default class User extends base {
     let mys = user.getMysUser(this.e)
     if (mys) {
       await this.e.reply(`当前绑定Cookie\nuid：${mys.getUid(this.e)}`)
+      // 安全：Cookie 等同账号凭证，不在群聊明文展示（防截屏/转发/日志泄漏），仅私聊返回
+      if (this.e.isGroup) {
+        await this.e.reply("出于安全考虑，Cookie 不在群聊展示，请私聊发送【#我的ck】查看")
+        return
+      }
       await this.e.reply(mys.ck)
     }
   }

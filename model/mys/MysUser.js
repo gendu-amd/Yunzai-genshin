@@ -219,12 +219,20 @@ export default class MysUser extends BaseModel {
       return false
     }
 
-    // 检查绑定UID
-    uids = await MysUser.getCkUid(ck, true, true)
-    if (!uids.uids || uids.uids.length === 0) {
-      return err(uids.msg || "CK失效")
+    // 检查绑定UID：由 ck 建 MysUser → reqMysUid 拉取各游戏 uid（替代已不存在的 MysUser.getCkUid）
+    let mysUser = await MysUser.create(ck)
+    if (!mysUser) {
+      return err("CK失效")
     }
-    uids = uids.uids
+    mysUser.setCkData({ ck })
+    let uidRet = await mysUser.reqMysUid()
+    if (uidRet.status !== 0) {
+      return err(uidRet.msg || "CK失效")
+    }
+    uids = lodash.flatten(Object.values(mysUser.uids || {})).filter(Boolean)
+    if (uids.length === 0) {
+      return err("CK失效")
+    }
     let uid = uids[0]
     let mys = new MysApi(uid + "", ck, { log: false })
     // 体力查询

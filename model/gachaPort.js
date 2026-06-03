@@ -1,20 +1,11 @@
 /**
- * GachaPort 实现（chapter2 · P2）
- *
- * 把 genshin 的抽卡记录(GachaLog)/充值流水(payLog)能力包装成 L1 契约层的 `gacha` 能力，
- * 注册到 `Bot.core.provide('gacha', …)`。供 xiaoyao 等按接口消费，
- * 不再 `file://` 直 import genshin 的 `model/gachaLog.js` / `apps/payLog.js`。
- *
- * 工厂式：返回 genshin 现有类的实例（同一类、构造无副作用），消费方调其方法
- *（如 `.logUrl()` / `.getAuthKey()`）。数据与旧直接 import 逐字等价。
- * 顶部静态 import:本模块由框架 wireManifests 在全部插件加载完后才导入,无加载顺序/循环之虞。
+ * `gacha` 能力实现 —— 工厂式包 genshin 的抽卡记录(GachaLog)/充值流水(payLog),返回同一类实例
+ * (构造无副作用)。供 xiaoyao 等按接口消费,不再 `file://` 直 import genshin 内部文件;数据逐字等价。
  */
 import GachaLog from "./gachaLog.js"
 import { payLog } from "../apps/payLog.js"
 
 const gachaPort = {
-  meta: { provider: "genshin", since: "P2" },
-
   /** 构造抽卡记录处理器。等价 new GachaLog(e);可 `.logUrl()/.updateLog()/.getLogData()` */
   log: e => new GachaLog(e),
 

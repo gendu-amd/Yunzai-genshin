@@ -222,6 +222,8 @@ export default class MysInfo {
       }
 
       for (let i in res) {
+        // 某项请求失败时为 false，直接访问 .api 会抛错并中断整批 —— 守卫后按失败处理
+        if (!res[i]) break
         res[i] = await mysInfo.checkCode(res[i], res[i].api, mysApi, api[res[i].api])
         mysInfo.gtest = true
 

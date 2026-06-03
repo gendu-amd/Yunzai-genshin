@@ -1,13 +1,6 @@
 /**
- * AccountPort 实现（chapter1-03）
- *
- * 把 genshin 现有米游社能力（MysInfo / MysApi）包装成 L1 契约层的 `account` 能力，
- * 并注册到 `Bot.core.provide('account', …)`。
- *
- * 非侵入原则：仅"新增"一条 core 通道;旧的 file:// / 直接 import 全部保留;消费方取不到自行降级。
- *
- * 实现=对现有 MysInfo/MysApi/User/NoteUser 的薄封装(同一函数,数据等价)。
- * 顶部静态 import:本模块由框架 wireManifests 在全部插件加载完后才导入,无加载顺序/循环之虞。
+ * `account` 能力实现 —— 对 genshin 现有 MysInfo/MysApi/User/NoteUser 的薄封装(同一函数,数据等价)。
+ * 各方法即转调底层,给消费方一个稳定接口;消费方经 `Bot.core.require('account')` 取用,取不到自行降级。
  */
 import MysInfo from "./mys/mysInfo.js"
 import MysApi from "./mys/mysApi.js"
@@ -15,8 +8,6 @@ import User from "./user.js"
 import NoteUser from "./mys/NoteUser.js"
 
 const accountPort = {
-  meta: { provider: "genshin", since: "3.1.3" },
-
   /** 解析当前事件绑定的 uid（按 e.game）。等价 MysInfo.getUid */
   getUid: (e, matchMsgUid = true) => MysInfo.getUid(e, matchMsgUid),
 
