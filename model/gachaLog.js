@@ -5,7 +5,7 @@ import fs from "node:fs"
 import common from "../../../lib/common/common.js"
 import gsCfg from "./gsCfg.js"
 import { Character, Weapon } from "#miao.models"
-import { gachaPools, term } from "./games.js"
+import { gachaPools, term, getRegion } from "./games.js"
 
 export default class GachaLog extends base {
   constructor(e) {
@@ -1029,22 +1029,8 @@ export default class GachaLog extends base {
   }
 
   getServer() {
-    switch (String(this.uid).slice(0, -8)) {
-      case "1":
-      case "2":
-        return this.e.isSr ? "prod_gf_cn" : "cn_gf01" // 官服
-      case "5":
-        return this.e.isSr ? "prod_qd_cn" : "cn_qd01" // B服
-      case "6":
-        return this.e.isSr ? "prod_official_usa" : "os_usa" // 美服
-      case "7":
-        return this.e.isSr ? "prod_official_euro" : "os_euro" // 欧服
-      case "8":
-      case "18":
-        return this.e.isSr ? "prod_official_asia" : "os_asia" // 亚服
-      case "9":
-        return this.e.isSr ? "prod_official_cht" : "os_cht" // 港澳台服
-    }
-    return "cn_gf01"
+    // 统一走 games.js SSOT（消除重复 region 表）；等价旧逻辑，且修正旧实现 default 对 sr
+    // 恒返回 cn_gf01（应为 prod_gf_cn）的 bug。
+    return getRegion(this.uid, this.e?.isSr ? "sr" : "gs")
   }
 }

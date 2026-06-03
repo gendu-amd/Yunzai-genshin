@@ -1,5 +1,6 @@
 import plugin from "../../../lib/plugins/plugin.js"
 import MysInfo from "../model/mys/mysInfo.js"
+import { getRegion } from "../model/games.js"
 import fetch from "node-fetch"
 
 export class takeBirthdayPhoto extends plugin {
@@ -100,23 +101,8 @@ export class takeBirthdayPhoto extends plugin {
   }
 
   async getServer(uid) {
-    switch (String(uid).slice(0, -8)) {
-      case "1":
-      case "2":
-        return "cn_gf01"
-      case "5":
-        return "cn_qd01"
-      case "6":
-        return "os_usa"
-      case "7":
-        return "os_euro"
-      case "8":
-      case "18":
-        return "os_asia"
-      case "9":
-        return "os_cht"
-    }
-    return "cn_gf01"
+    // 生日照仅原神(gs);统一走 games.js SSOT,消除重复 region 表(映射与旧实现一致)
+    return getRegion(uid, "gs")
   }
 
   async getBirthdayStar(uid, e_hk4e_token, ck) {

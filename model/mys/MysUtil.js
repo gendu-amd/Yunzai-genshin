@@ -1,4 +1,5 @@
 import { Data } from "#miao"
+import { getGameKey as gamesGetGameKey } from "../games.js"
 
 const games = [
   { key: "gs", name: "原神" },
@@ -22,21 +23,9 @@ const MysUtil = {
     return false
   },
 
-  // 获取标准gameKey
+  // 获取标准gameKey —— 委托 games.js SSOT(含 null 守卫 + nap 别名,消除重复 switch)
   getGameKey(game) {
-    // 兼容e的处理
-    if (game.game) {
-      game = game.game
-    }
-    switch (game) {
-      case "sr":
-      case "star":
-        return "sr"
-      case "zzz":
-        return "zzz"
-      default:
-        return "gs"
-    }
+    return gamesGetGameKey(game)
   },
 
   // 生成设备guid
