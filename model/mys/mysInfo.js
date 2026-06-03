@@ -4,6 +4,7 @@ import lodash from "lodash"
 import NoteUser from "./NoteUser.js"
 import MysUser from "./MysUser.js"
 import DailyCache from "./DailyCache.js"
+import { getGameKey } from "../games.js"
 
 export default class MysInfo {
   static tips = "请先#绑定Cookie\n发送【Cookie帮助】查看配置教程"
@@ -95,7 +96,7 @@ export default class MysInfo {
    */
   static async getUid(e, matchMsgUid = true) {
     let user = await NoteUser.create(e)
-    const game = e?.game || (e?.isSr ? "sr" : "gs")
+    const game = getGameKey(e)
     if (e.uid && matchMsgUid) {
       /** 没有绑定的自动绑定 */
       return user.autoRegUid(e.uid, game)
@@ -154,7 +155,7 @@ export default class MysInfo {
 
     let user = await NoteUser.create(e)
     let selfUser = at ? await NoteUser.create(at) : user
-    const game = e?.game || (e?.isSr ? "sr" : "gs")
+    const game = getGameKey(e)
 
     if (!selfUser.hasCk) {
       if (e.noTips !== true) {
@@ -201,7 +202,7 @@ export default class MysInfo {
 
     let user = e.user?.getMysUser()
     option.device = user.device
-    option.game = e?.game || (e?.isSr ? "sr" : "gs")
+    option.game = getGameKey(e)
     let mysApi = new MysApi(mysInfo.uid, mysInfo.ckInfo.ck, option)
 
     let res
