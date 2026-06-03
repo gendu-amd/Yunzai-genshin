@@ -53,11 +53,8 @@
 - 性质:工厂返回 genshin 现有类实例(同一类、构造无副作用),与旧 `file://` import 逐字等价;非侵入。
 - 注:SR 抽卡 authkey 受平台限制(见 multi-game-refactor §4),与本能力无关。
 
-## 插件清单（manifest） — chapter1-05（2026-05-31）
-- 实现:`manifest.js`(副作用 import 自注册到 `Bot.core.require('pluginRegistry')`)。
-- 声明:`provides=[account, gameRegistry]`、`requires=[]`、`type=data-provider`、`guoba=true`。
-- 纯声明式元信息,框架据此做能力提供/消费查询、依赖体检;不触碰 loader/派发。
-- 随迁移推进,`requires`/`hooks` 逐步填充(如接入 `renderer`/暴露 `gacha:afterFetch`)。
+## 命令前缀贡献
+- `index.js` 直接 `Bot.core.gamePrefix.register(...)` 注册 sr/zzz 命令前缀(`*`/星铁、`%`/绝区零),供框架派发归一化。
 
-## 计划提供（后续）
-- 懒激活(命令前缀命中才激活,改 loader,须 `0-00` 基线护栏)等,见主仓 `docs/refactor-progress.md` 路线。
+## 注册方式
+- 各 `model/*Port.js` 在末尾直接 `Bot.core.provide('account'|'gameRegistry'|'gacha', …)`,`index.js` 副作用 import 触发。无 manifest/反射装配(已随 ADR-005/007 作废精简)。
