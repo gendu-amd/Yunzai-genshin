@@ -37,6 +37,17 @@ const accountPort = {
 
   /** 遍历所有已绑 CK 用户(fn 收 NoteUser,含 .qq/.eachMysUser)。等价 NoteUser.forEach */
   forEachUser: fn => NoteUser.forEach(fn),
+
+  /**
+   * 取某用户某游戏「已绑 CK」的 uid 列表(去重)。等价 NoteUser.create(e).getCkUidList(game)。
+   * 供消费方按 uid 逐个 getData('dailyNote') —— 统一账号源,替代各插件自维护的 ck 库。
+   * @returns {Promise<string[]>}
+   */
+  async getBindUidList(e, game = "gs") {
+    const user = await NoteUser.create(e)
+    const list = user?.getCkUidList?.(game) || []
+    return [...new Set(list.map(ds => String(ds?.uid)).filter(Boolean))]
+  },
 }
 
 // ADR-007：注册由框架据 manifest.provides 自动完成(loader.wireManifests),此处只导出实现。

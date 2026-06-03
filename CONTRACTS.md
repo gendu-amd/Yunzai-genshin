@@ -18,6 +18,7 @@
   | `init(e, api)` | 初始化某 api 的 MysApi,等价 `MysInfo.init` |
   | `bindCookie(e)` | 绑定 Cookie/Stoken(先设 `e.ck`/`e.msg`),等价 `new User(e).bing()`;写操作 |
   | `forEachUser(fn)` | 遍历所有已绑 CK 用户(fn 收 NoteUser,含 `.qq`/`.eachMysUser`),等价 `NoteUser.forEach` |
+  | `getBindUidList(e, game="gs")` | 取某用户某游戏已绑 CK 的 uid 列表(去重),等价 `NoteUser.create(e).getCkUidList(game)`。供"多账号/多游戏体力"等统一账号源(替代各插件自维护 ck 库) |
 - 性质:**非侵入新增**——仅在现有 `MysInfo`/`MysApi` 之上包一层 `core` 通道;旧的直接 import / `file://` 调用全部保留照常工作。消费方可逐步改用 `Bot.core.require("account")`。
 
 ### `gameRegistry`（多游戏 SSOT） — chapter1-02b（2026-05-31）
