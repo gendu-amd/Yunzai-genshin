@@ -10,6 +10,7 @@ import BaseModel from "./BaseModel.js"
 import NoteUser from "./NoteUser.js"
 import MysApi from "./mysApi.js"
 import MysUtil from "./MysUtil.js"
+import { gameKeyByBiz } from "../games.js"
 import lodash from "lodash"
 import fetch from "node-fetch"
 import { MysUserDB, UserDB } from "../db/index.js"
@@ -348,21 +349,9 @@ export default class MysUser extends BaseModel {
     return { status: 0, msg: "" }
   }
 
-  // 根据game_biz 判断是哪个游戏
+  // 根据 game_biz 判断游戏 key —— 统一走 games.js 的 biz SSOT(消除与 GAMES.biz 重复的 switch)
   getGameKey(gameBiz) {
-    switch (gameBiz) {
-      case "hk4e_cn":
-      case "hk4e_global":
-        return "gs"
-      case "hkrpg_cn":
-      case "hkrpg_global":
-        return "sr"
-      case "nap_global":
-      case "nap_cn":
-        return "zzz"
-      default:
-        return "gs"
-    }
+    return gameKeyByBiz(gameBiz)
   }
 
   async getGameRole(serv = "mys") {

@@ -179,6 +179,15 @@ export function getBiz(gameKey, isOs = false) {
   return isOs ? g.biz.os : g.biz.cn
 }
 
+/** game_biz（hk4e_cn/hkrpg_global/nap_cn 等）反查游戏 key；未知→gs */
+export function gameKeyByBiz(gameBiz) {
+  for (const k of GAME_KEYS) {
+    const b = GAMES[k]?.biz
+    if (b && (b.cn === gameBiz || b.os === gameBiz)) return k
+  }
+  return "gs"
+}
+
 /** 取 UIGF/SRGF 导入导出的游戏键（hk4e/hkrpg/nap） */
 export function uigfKey(gameKey) {
   return game(gameKey).uigfKey
@@ -215,6 +224,7 @@ export default {
   isGame,
   getRegion,
   getBiz,
+  gameKeyByBiz,
   uigfKey,
   term,
   gachaPools,
