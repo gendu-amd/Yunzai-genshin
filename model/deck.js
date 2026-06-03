@@ -41,7 +41,9 @@ export default class Deck extends base {
     let res = {}
     for (let api of ["basicInfo", "avatar_cardList", "action_cardList"]) {
       if ((id == 2 && api == "avatar_cardList") || (id == 1 && api == "action_cardList")) continue
-      res[api] = (await MysInfo.get(this.e, api)).data
+      let ret = await MysInfo.get(this.e, api)
+      if (!ret) return false // 接口失败(MysInfo.get 已回复错误),避免 false.data 崩溃
+      res[api] = ret.data
     }
     this.model = "deckCard"
 

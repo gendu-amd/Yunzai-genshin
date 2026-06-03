@@ -92,9 +92,12 @@ export class takeBirthdayPhoto extends plugin {
       region: this.region,
     })
     let res = await fetch(url, { method: "POST", body, headers })
-    const e_hk4e_token = res.headers.get("set-cookie").match(/e_hk4e_token=(.*?);/)[1]
+    // set-cookie 可能缺失/不含 e_hk4e_token,先安全取再判空,避免 .match(null)[1] 崩溃
+    const setCookie = res.headers.get("set-cookie")
+    const matched = setCookie && setCookie.match(/e_hk4e_token=(.*?);/)
+    const e_hk4e_token = matched ? matched[1] : ""
     res = await res.json()
-    if (res.retcode != 0) {
+    if (res.retcode != 0 || !e_hk4e_token) {
       return false
     }
     return e_hk4e_token

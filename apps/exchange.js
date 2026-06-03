@@ -169,8 +169,11 @@ export class exchange extends plugin {
   async useCode() {
     const cdkCode = this.e.msg.replace(/#(原神|星铁|绝区零)?(兑换码使用|cdk-u)/, "").trim()
     const res = await MysInfo.get(this.e, "useCdk", { cdk: cdkCode })
+    if (!res) return // 接口失败(已回复错误),避免 false.retcode 崩溃
     if (res.retcode == 0) {
-      this.e.reply(`${res.data.msg}`)
+      this.e.reply(`${res.data?.msg}`)
+    } else {
+      this.e.reply(`兑换失败：${res.message || "请稍后再试"}`)
     }
   }
 
