@@ -291,18 +291,26 @@ export default class MysInfo {
     const cache = DailyCache.create()
     if ((!force && (await cache.get("cache-ready"))) || this.initing) return true
     this.initing = true
-    await DailyCache.clearOutdatedData()
+    try {
+      await DailyCache.clearOutdatedData()
 
-    if (clearData) await MysUser.clearCache()
+      if (clearData) await MysUser.clearCache()
 
-    // 先初始化用户CK，减少一些公共CK中ltuid无法识别的情况
-    await MysInfo.initUserCk()
-    // 初始化公共ck
-    await MysInfo.initPubCk()
+      // 先初始化用户CK，减少一些公共CK中ltuid无法识别的情况
+      await MysInfo.initUserCk()
+      // 初始化公共ck
+      await MysInfo.initPubCk()
 
-    await cache.set("cache-ready", new Date() * 1)
-    delete this.initing
-    return true
+      await cache.set("cache-ready", new Date() * 1)
+      return true
+    } catch (err) {
+      // 任一步抛错(Redis/DB 异常等)不写 cache-ready,下次派发可重试;
+      // 关键:必须在 finally 释放 initing,否则永久卡死 → 查询池再也不重建 → "暂无可用CK" 直到重启。
+      logger?.error?.(`[mysInfo] initCache 初始化查询池失败：${err?.message}`)
+      return false
+    } finally {
+      delete this.initing
+    }
   }
 
   static async getBingCkUid() {
